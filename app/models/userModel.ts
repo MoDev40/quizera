@@ -17,8 +17,8 @@ const userSchema = new Schema({
         type: String,
         unique: true,
       },
-      name: { type:String },
-      avatar: { type:String },
+    name: { type:String },
+    avatar: { type:String },
 },
 {timestamps:true}
 )

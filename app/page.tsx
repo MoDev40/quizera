@@ -1,8 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <Link href="/api/auth/signin">Sign in</Link>
+    <div>
+      <Link href="/api/auth/signin">Sign in</Link>
+    </div>
   );
 }

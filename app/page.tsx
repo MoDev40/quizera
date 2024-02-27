@@ -1,9 +1,7 @@
-import Link from "next/link";
+import HomeHero from "./_component/HomeHero";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div>
-      <Link href="/api/auth/signin">Sign in</Link>
-    </div>
+    <HomeHero/>
   );
 }

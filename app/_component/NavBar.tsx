@@ -21,14 +21,14 @@ const NavBar = () => {
     <div className='w-full md:w-[1120px] md:mx-auto p-4 flex flex-row justify-between items-center'>
         <div>
         <Link href="/">
-            <Button variant="outline">Gallery</Button>
+            <Button variant="outline">Quizera</Button>
         </Link>
         </div>
         <div className='space-x-3'>
         { data?.user?
         (   
             <div className='space-x-2'>
-                <Link href="/upload-img">
+                <Link href="/">
                     <Button className='rounded-sm' variant="outline">Leaderboard</Button>
                 </Link>
                 <Button onClick={handleSignOut} className='rounded-md' variant="destructive">Log out</Button>

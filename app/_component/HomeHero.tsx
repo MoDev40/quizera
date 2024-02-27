@@ -1,15 +1,32 @@
 'use client'
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import NavBar from './NavBar';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {CategorySelection} from './CategorySelection';
 import { SelectLevel } from './LevelSelection';
 import { Input } from '@/components/ui/input';
+import { useOption } from '../hooks/OptionConext';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const HomeHero = () => {
+  const router = useRouter()
   const {data} = useSession()
-  return (
+  const {option,setOption} = useOption()
+  const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {value} = event.target
+    setOption({...option,level:option?.level as string,category:option?.category as string, number:Number(value) || option?.number as number})
+    }
+
+    const handleStart = ()=>{
+      if(!option || option.category == "" || option.level == ""){
+        console.log("empty option");
+      }
+      router.push("/quiz/playground")
+    }
+   return (
     <>
     <NavBar/>
     <div className="flex flex-col items-center justify-center h-screen">
@@ -18,10 +35,11 @@ const HomeHero = () => {
         Unleash your knowledge and challenge yourself with captivating quizzes!
       </p>
         {
-          data?.user ? <div className='flex items-center md:flex-row md:space-x-4'>
+          data?.user ? <div className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
             <CategorySelection/> 
             <SelectLevel/>
-            <Input placeholder='Number'/> 
+            <Input onChange={handelChange} defaultValue={5} placeholder='Number'type='number'/>
+            <Button onClick={handleStart} className={cn('w-full')}>Start Quiz</Button> 
           </div>: <Link href="/api/auth/signin">Sign in</Link>
         }
     </div>

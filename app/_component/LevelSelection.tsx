@@ -11,11 +11,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { useOption } from "../hooks/OptionConext"
 
 export function SelectLevel() {
-    const [level, setLevel] = React.useState("")
+  const {option,setOption} = useOption()
   return (
-    <Select onValueChange={ value => setLevel(value)}>
+    <Select onValueChange={ value => setOption({...option,level:value,category:option?.category as string, number:option?.number as number})}>
       <SelectTrigger className={cn("p-4")}>
         <SelectValue placeholder="Select a Level" />
       </SelectTrigger>

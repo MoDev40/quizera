@@ -12,6 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils";
+import { useOption } from "../hooks/OptionConext";
 
 
 interface TriviaCategory {
@@ -27,11 +28,11 @@ const fetcher: Fetcher<any,string> = (url): Promise<TriviaCategories> =>
 fetch(url,{cache:"no-cache"}).then((res) => res.json());
 
 export function CategorySelection () {
-    const [category, setCategory] = React.useState("")
+    const {option,setOption} = useOption()
     const {data,isLoading} = useSWR<TriviaCategories>("https://opentdb.com/api_category.php",fetcher)
   return (
     isLoading ? <Loader size={30} className="animate-spin"/>:
-    <Select  onValueChange={ value => setCategory(value)}>
+    <Select  onValueChange={ value => setOption({...option,level:option?.level as string,category:value, number:option?.number as number})}>
     <SelectTrigger className={cn("p-4")}>
       <SelectValue placeholder="Select a category" />
     </SelectTrigger>

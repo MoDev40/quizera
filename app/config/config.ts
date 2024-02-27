@@ -1,0 +1,1 @@
+export const uri = process.env.DATABASE_URL!

@@ -4,7 +4,6 @@ import { Model, Schema, model, models } from "mongoose"
 interface LeaderboardDocument extends Document {
     id:string,
     userId:string,
-    name:string,
     points:number,
     date:Date
 }
@@ -19,8 +18,8 @@ const leaderboardSchema = new Schema({
         type:String,
         required:true
     },
-    name:{
-        type:String,
+    date:{
+        type:Date,
         required:true
     },
     points:{

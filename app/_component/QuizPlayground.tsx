@@ -1,10 +1,13 @@
 'use client'
-import React, {useState } from 'react'
+import React, {use, useEffect, useState } from 'react'
 import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { toast } from 'sonner'
+import {shuffle} from "lodash"
 
 interface Question {
   id: number;
@@ -20,12 +23,21 @@ interface ResponseType {
   results:Question[]
 }
 
-const fetcher : Fetcher<any,string> = (url): Promise<ResponseType> => fetch(url,{cache:"no-cache"}).then((res) => res.json())
+const fetcher : Fetcher<any,string> = (url): Promise<ResponseType> => fetch(url,{cache:"force-cache"}).then((res) => res.json())
+
+function sanitizeHtml(text:string):string {
+  const element = document.createElement('h1');
+  element.innerHTML = text;
+  return element.textContent || element.innerText;
+}
 
 const QuizPlayground = () => {
     const router = useRouter()
-    const {option} = useOption()
+    const {data:user} = useSession()
+    const {option,setOption} = useOption()
+
     const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${Number(option?.category)}&difficulty=${option?.level.toLocaleLowerCase()}&type=multiple`,fetcher)
+
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
@@ -43,15 +55,33 @@ const QuizPlayground = () => {
 
     }
 
+    const updateLeader = async()=>{
+      fetch(`/api/quiz/leaderboard/${user?.user?.email}`,{
+        method:"PUT",
+        body: JSON.stringify({points})
+      }).then(()=>{
+        setIsDone(false)
+        setOption(null)
+        toast(`Result ${points}`)
+        router.push("/")
+      })
+    }
+
+    useEffect(()=>{
+      if(isDone){
+        updateLeader()
+      }
+    },[isDone])
+
   return (
-    isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Fetching data....</p></div>:
+    isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Preparing data....</p></div>:
     !isDone?(
       <div className='w-full p-4 space-y-5'>
       <div className='text-center'>
         {
           data?.results&&
           <>
-            <h1>{data?.results[i].question}</h1>
+            <h1>{sanitizeHtml(data?.results[i]?.question)}</h1>
             <p>({i+1}/{data?.results.length})</p>
           </>
         }
@@ -59,8 +89,8 @@ const QuizPlayground = () => {
       <div>
           <div className='grid md:grid-cols-2 gap-2'>
           { data?.results&& 
-            data?.results[i].incorrect_answers.concat(data.results[i].correct_answer).map((ia,index)=>(
-                <Button key={index} onClick={()=>handleCheckAndNext(ia)} variant="outline">{ia}</Button>
+            shuffle(data?.results[i]?.incorrect_answers.concat(data.results[i]?.correct_answer)).map((ia,index)=>(
+              <Button key={index} onClick={()=>handleCheckAndNext(ia)} variant="outline">{ia}</Button>
             ))
           }
           </div>

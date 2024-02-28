@@ -1,6 +1,7 @@
 'use client'
 import { OptionProvider } from "@/app/hooks/OptionConext"
 import { SessionProvider } from "next-auth/react"
+import { Toaster } from "@/components/ui/sonner"
 import React from "react"
 
 const Provider = ({children}:{children:React.ReactNode}) => {
@@ -8,6 +9,7 @@ const Provider = ({children}:{children:React.ReactNode}) => {
     <SessionProvider>
       <OptionProvider>
         {children}
+        <Toaster />
       </OptionProvider>
     </SessionProvider>
   )

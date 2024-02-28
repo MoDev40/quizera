@@ -40,7 +40,7 @@ export function CategorySelection () {
       <SelectGroup>
         <SelectLabel>Categories</SelectLabel>
         {data?.trivia_categories?.map((category: TriviaCategory) => (
-        <SelectItem  key={category.id} value={category.name}>
+        <SelectItem  key={category.id} value={category.id.toString()}>
           {category.name}
         </SelectItem>
         ))}

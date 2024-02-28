@@ -10,6 +10,7 @@ import { useOption } from '../hooks/OptionConext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { toast } from "sonner"
 
 const HomeHero = () => {
   const router = useRouter()
@@ -22,7 +23,8 @@ const HomeHero = () => {
 
     const handleStart = ()=>{
       if(!option || option.category == "" || option.level == ""){
-        console.log("empty option");
+        toast("Select Options..")
+        return
       }
       router.push("/quiz/playground")
     }

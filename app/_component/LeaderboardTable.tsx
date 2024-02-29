@@ -54,7 +54,6 @@ const LeaderboardTable = () => {
   }
   return (
     isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Getting data....</p></div> :
-    <div className="md:p-5 md:space-y-5">
     <Table className={cn("w-full")}>
     <TableCaption>
         <div className="flex flex-row justify-between">
@@ -86,8 +85,6 @@ const LeaderboardTable = () => {
       }
     </TableBody>
     </Table>
-
-    </div>
   )
 }
 

@@ -59,7 +59,7 @@ const HomeHero = () => {
       <p className="text-center text-xl">
         Quizera © 2024 
       </p>
-      <Link className="text-xs" href="https://github.com/MoDev40/quizera">source code</Link>
+      <Link className="text-xs" target='_blank' href="https://github.com/MoDev40/quizera">source code</Link>
       </div>
     </footer>
     </>

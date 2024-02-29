@@ -36,34 +36,35 @@ const QuizPlayground = () => {
     const {data:user} = useSession()
     const router = useRouter()
     
-    if(!user?.user?.email){
-      return router.push("/")
-    }
     const {option,setOption} = useOption()
-
+    
     const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${option?.category}&difficulty=${option?.level?.toLocaleLowerCase()}&type=multiple`,fetcher)
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
-
+    
     useEffect(()=>{
-      if(option?.level){
-
-        if(option.level.toLocaleLowerCase() === "medium"){
-          setPoints(4)
-        }else if(option.level.toLocaleLowerCase() === "hard"){
-          setPoints(5)
-        }else{
-          setPoints(3)
+        if (option?.level) {
+          let newPoints = 3;
+          if (option.level.toLowerCase() === "medium") {
+            newPoints = 4;
+          } else if (option.level.toLowerCase() === "hard") {
+            newPoints = 5;
+          }
+          setPoints(newPoints);
         }
+      },[option?.level])
+      
+      if(!user?.user?.email){
+        return router.push("/")
       }
-    },[option?.level])
+
     const handleCheckAndNext = (answer:string)=>{
       console.log(points);
       if(answer === data?.results[i].correct_answer){
         setPoints((prevPoints)=>prevPoints+3)
       }
-
+      
       if((i+1) != data?.results.length!){
         setI((prevI)=>prevI+1)
       }else{

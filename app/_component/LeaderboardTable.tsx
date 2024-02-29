@@ -38,15 +38,15 @@ const LeaderboardTable = () => {
   const [pageNum, setPageNum] = useState<number>(1);
   const {data:user} = useSession()
 
-  if(!user?.user?.email){
-    return router.push("/")
-  }
-
   const { data, isLoading } = useSWR<TypeResponse>(
     `/api/leaderboard/get/${pageNum}`,
     fetcher
   );
 
+  if(!user?.user?.email){
+    return router.push("/")
+  }
+  
   const handlePrev = ()=>{
     if(pageNum != 1){
       setPageNum((prev)=>prev-1)

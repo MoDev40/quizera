@@ -113,7 +113,7 @@ const QuizPlayground = () => {
         resultLoad ? 
         <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>calculating result....</p></div>
         :
-        <Button className='mt-10' onClick={updateLeader}>Get Result</Button>
+        <Button className='mt-10' onClick={updateLeader}>Push Result to Leaderboard</Button>
       }
     </div>
   )

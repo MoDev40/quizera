@@ -56,7 +56,7 @@ const QuizPlayground = () => {
     }
 
     const updateLeader = async()=>{
-      fetch(`/api/quiz/leaderboard/${user?.user?.email}`,{
+      fetch(`/api/leaderboard/update/${user?.user?.email}`,{
         method:"PUT",
         body: JSON.stringify({points})
       }).then(()=>{

@@ -28,7 +28,7 @@ const NavBar = () => {
         { data?.user?
         (   
             <div className='space-x-2'>
-                <Link href="/">
+                <Link href="/leaderboard">
                     <Button className='rounded-sm' variant="outline">Leaderboard</Button>
                 </Link>
                 <Button onClick={handleSignOut} className='rounded-md' variant="destructive">Log out</Button>

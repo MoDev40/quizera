@@ -2,20 +2,15 @@
 import { Model, Schema, model, models } from "mongoose"
 
 interface LeaderboardDocument extends Document {
-    id:string,
-    userId:string,
+    user:Schema.Types.ObjectId,
     points:number,
     date:Date
 }
 
 const leaderboardSchema = new Schema({
-    id:{
-        type:String,
-        default: () => `lb_${Math.random().toString(36).substring(2)}`,
-        required:true
-    },
-    userId:{
-        type:String,
+    user:{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required:true
     },
     date:{

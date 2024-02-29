@@ -23,8 +23,18 @@ export const authOptions : NextAuthOptions = {
                 throw new Error('No profile')
             }
 
-            connectDB()
-            await UserModel.updateOne({email:profile.email},{$set:{email:profile.email,name:profile.name,avatar:profile.image},upsert:true})
+            try {
+                connectDB()
+                await UserModel.updateOne(
+                  { email: profile.email },
+                  { $set: { email: profile.email, name: profile.name, avatar: profile.image } },
+                  { upsert: true }
+                );
+                console.log('Document updated successfully!');
+              } catch (error) {
+                console.error('Error updating document:', error);
+              }
+              
             return true
         }
     }

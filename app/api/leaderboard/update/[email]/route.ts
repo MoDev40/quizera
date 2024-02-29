@@ -38,7 +38,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
                   }
                 },
                 {
-                  userId: user?.id
+                  user:user?._id
                 }
               ]
             },
@@ -46,7 +46,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
             {
                 // Update leaderboard if exists
               $set: {
-                userId: user?.id,
+                user: user?._id,
                 date: startDate
               },
                 // Increment the leaderboard point

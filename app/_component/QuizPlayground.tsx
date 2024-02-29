@@ -32,8 +32,12 @@ function sanitizeHtml(text:string):string {
 }
 
 const QuizPlayground = () => {
-    const router = useRouter()
     const {data:user} = useSession()
+    const router = useRouter()
+    
+    if(!user?.user?.email){
+      return router.push("/")
+    }
     const {option,setOption} = useOption()
 
     const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${Number(option?.category)}&difficulty=${option?.level.toLocaleLowerCase()}&type=multiple`,fetcher)

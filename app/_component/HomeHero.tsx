@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
+import { Github, Loader } from 'lucide-react';
 
 const HomeHero = () => {
   const router = useRouter()
@@ -37,14 +38,23 @@ const HomeHero = () => {
         Unleash your knowledge and challenge yourself with captivating quizzes!
       </p>
         {
-          data?.user ? <div className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
+          data?.user && <div className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
             <CategorySelection/> 
             <SelectLevel/>
             <Input onChange={handelChange} defaultValue={5} placeholder='Number'type='number'/>
-            <Button onClick={handleStart} className={cn('w-full')}>Start Quiz</Button> 
-          </div>: <Link href="/api/auth/signin">Sign in</Link>
+            <Button onClick={handleStart} className={cn('w-full')}>Start Quiz</Button>
+          </div> 
         }
     </div>
+    <footer>
+      <div className='flex flex-row space-x-4 items-center justify-center'>
+      <Link href="https://github.com/MoDev40" target='_blank'><Github size={30}/></Link>
+      <p className="text-center text-xl">
+        Quizera © 2024 
+      </p>
+      <Link className="text-xs" href="https://github.com/MoDev40/quizera">source code</Link>
+      </div>
+    </footer>
     </>
   );
 };

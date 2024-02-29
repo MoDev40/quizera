@@ -18,7 +18,7 @@ const NavBar = () => {
     }
 
   return (
-    <div className='w-full md:w-[1120px] md:mx-auto p-4 flex flex-row justify-between items-center'>
+    <div className='p-4 flex flex-row justify-between items-center'>
         <div>
         <Link href="/">
             <Button variant="outline">Quizera</Button>

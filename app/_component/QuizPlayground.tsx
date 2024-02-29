@@ -85,11 +85,11 @@ const QuizPlayground = () => {
       })
     }
 
-    useEffect(()=>{
-      if(isDone){
-        updateLeader()
+    useEffect(() => {
+      if (isDone) {
+        updateLeader();
       }
-    },[isDone])
+    }, [isDone]);    
 
   return (
     isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Preparing data....</p></div>:

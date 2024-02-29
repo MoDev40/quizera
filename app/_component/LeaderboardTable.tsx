@@ -44,7 +44,8 @@ const LeaderboardTable = () => {
   );
 
   if(!user?.user?.email){
-    return router.push("/")
+    router.push("/")
+    return 
   }
   
   const handlePrev = ()=>{

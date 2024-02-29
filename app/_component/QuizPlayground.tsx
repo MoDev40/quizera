@@ -46,7 +46,8 @@ const QuizPlayground = () => {
     
       
       if(!user?.user?.email){
-        return router.push("/")
+        router.push("/")
+        return 
       }
 
     const handleCheckAndNext = (answer:string)=>{

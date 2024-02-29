@@ -23,7 +23,7 @@ interface ResponseType {
   results:Question[]
 }
 
-const fetcher : Fetcher<any,string> = (url): Promise<ResponseType> => fetch(url,{cache:"default"}).then((res) => res.json())
+const fetcher : Fetcher<any,string> = (url): Promise<ResponseType> => fetch(url,{cache:"force-cache"}).then((res) => res.json())
 
 function sanitizeHtml(text:string):string {
   const element = document.createElement('h1');
@@ -47,18 +47,19 @@ const QuizPlayground = () => {
     const [isDone,setIsDone] = useState<boolean>(false)
 
     useEffect(()=>{
-      if(data?.results){
+      if(option?.level){
 
-        if(data?.results[i]?.difficulty === "medium"){
+        if(option.level.toLocaleLowerCase() === "medium"){
           setPoints(4)
-        }else if(data?.results[i]?.difficulty === "hard"){
+        }else if(option.level.toLocaleLowerCase() === "hard"){
           setPoints(5)
         }else{
           setPoints(3)
         }
       }
-    },[data?.results])
+    },[option?.level])
     const handleCheckAndNext = (answer:string)=>{
+      console.log(points);
       if(answer === data?.results[i].correct_answer){
         setPoints((prevPoints)=>prevPoints+3)
       }

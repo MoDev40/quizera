@@ -44,12 +44,11 @@ const HomeHero = () => {
       </p>
         {
           data?.user && <>
-          <div className='flex md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
+          <div className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
             <CategorySelection/> 
             <SelectLevel/>
             <Input onChange={handelChange} defaultValue={5} placeholder='Number'type='number'/>
             <Button onClick={handleStart} className={cn('w-full')}>Start Quiz</Button>
-            <Button className={cn('w-full')}  onClick={handleStartRandom} >Random</Button>
           </div> 
           </>
         }

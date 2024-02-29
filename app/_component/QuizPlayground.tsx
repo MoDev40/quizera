@@ -4,7 +4,7 @@ import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import {shuffle} from "lodash"
@@ -42,27 +42,22 @@ const QuizPlayground = () => {
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
+    const [resultLoad,setResultLoad] = useState<boolean>(false)
     
-    useEffect(()=>{
-        if (option?.level) {
-          let newPoints = 3;
-          if (option.level.toLowerCase() === "medium") {
-            newPoints = 4;
-          } else if (option.level.toLowerCase() === "hard") {
-            newPoints = 5;
-          }
-          setPoints(newPoints);
-        }
-      },[option?.level])
       
       if(!user?.user?.email){
         return router.push("/")
       }
 
     const handleCheckAndNext = (answer:string)=>{
-      console.log(points);
       if(answer === data?.results[i].correct_answer){
-        setPoints((prevPoints)=>prevPoints+3)
+          let ansPoint = 3;
+          if (option?.level.toLowerCase() === "medium") {
+            ansPoint = 4;
+          } else if (option?.level.toLowerCase() === "hard") {
+            ansPoint = 5;
+        }
+        setPoints((prevPoints)=>prevPoints+ansPoint)
       }
       
       if((i+1) != data?.results.length!){
@@ -74,6 +69,7 @@ const QuizPlayground = () => {
     }
 
     const updateLeader = async()=>{
+      setResultLoad(true)
       fetch(`/api/leaderboard/update/${user?.user?.email}`,{
         method:"PUT",
         body: JSON.stringify({points})
@@ -82,14 +78,10 @@ const QuizPlayground = () => {
         setOption(null)
         toast(`Result ${points}`)
         router.push("/")
+      }).finally(()=>{
+        setResultLoad(false)
       })
-    }
-
-    useEffect(() => {
-      if (isDone) {
-        updateLeader();
-      }
-    }, [isDone]);    
+    } 
 
   return (
     isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Preparing data....</p></div>:
@@ -115,7 +107,14 @@ const QuizPlayground = () => {
       </div>
       </div>
     ):
-    <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>calculating result....</p></div>
+    <div className='flex justify-center'>
+      {
+        resultLoad ? 
+        <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>calculating result....</p></div>
+        :
+        <Button className='mt-10' onClick={updateLeader}>Get Result</Button>
+      }
+    </div>
   )
 }
 

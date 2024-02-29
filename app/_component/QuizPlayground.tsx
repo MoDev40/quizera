@@ -23,7 +23,7 @@ interface ResponseType {
   results:Question[]
 }
 
-const fetcher : Fetcher<any,string> = (url): Promise<ResponseType> => fetch(url,{cache:"force-cache"}).then((res) => res.json())
+const fetcher : Fetcher<any,string> = (url): Promise<ResponseType> => fetch(url,{cache:"default"}).then((res) => res.json())
 
 function sanitizeHtml(text:string):string {
   const element = document.createElement('h1');
@@ -41,12 +41,23 @@ const QuizPlayground = () => {
     }
     const {option,setOption} = useOption()
 
-    const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${option?.category}&difficulty=${option?.level.toLocaleLowerCase()}&type=multiple`,fetcher)
-
+    const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${option?.category}&difficulty=${option?.level?.toLocaleLowerCase()}&type=multiple`,fetcher)
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
 
+    useEffect(()=>{
+      if(data?.results){
+
+        if(data?.results[i]?.difficulty === "medium"){
+          setPoints(4)
+        }else if(data?.results[i]?.difficulty === "hard"){
+          setPoints(5)
+        }else{
+          setPoints(3)
+        }
+      }
+    },[data?.results])
     const handleCheckAndNext = (answer:string)=>{
       if(answer === data?.results[i].correct_answer){
         setPoints((prevPoints)=>prevPoints+3)

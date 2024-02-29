@@ -29,21 +29,29 @@ const HomeHero = () => {
       }
       router.push("/quiz/playground")
     }
+    const handleStartRandom = ()=>{
+      setOption({...option,level:option?.level as string,category:option?.category as number, number:5})
+      router.push("/quiz/playground")
+    }
+    
    return (
     <>
     <NavBar/>
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col space-y-4 items-center justify-center h-screen">
       <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome to Quizera</h1>
       <p className="text-lg text-center  text-gray-600 mb-8 capitalize">
         Unleash your knowledge and challenge yourself with captivating quizzes!
       </p>
         {
-          data?.user && <div className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
+          data?.user && <>
+          <div className='flex md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
             <CategorySelection/> 
             <SelectLevel/>
             <Input onChange={handelChange} defaultValue={5} placeholder='Number'type='number'/>
             <Button onClick={handleStart} className={cn('w-full')}>Start Quiz</Button>
+            <Button className={cn('w-full')}  onClick={handleStartRandom} >Random</Button>
           </div> 
+          </>
         }
     </div>
     <footer>

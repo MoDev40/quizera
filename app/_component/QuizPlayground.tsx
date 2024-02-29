@@ -1,5 +1,5 @@
 'use client'
-import React, {use, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Loader } from 'lucide-react'
@@ -31,6 +31,7 @@ function sanitizeHtml(text:string):string {
   return element.textContent || element.innerText;
 }
 
+
 const QuizPlayground = () => {
     const {data:user} = useSession()
     const router = useRouter()
@@ -40,7 +41,7 @@ const QuizPlayground = () => {
     }
     const {option,setOption} = useOption()
 
-    const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${Number(option?.category)}&difficulty=${option?.level.toLocaleLowerCase()}&type=multiple`,fetcher)
+    const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${option?.category}&difficulty=${option?.level.toLocaleLowerCase()}&type=multiple`,fetcher)
 
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)

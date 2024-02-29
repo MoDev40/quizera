@@ -14,6 +14,7 @@ const NavBar = () => {
     }
     const handleSignOut = async()=>{
         await signOut()
+        window.localStorage.clear()
         router.push("/")
     }
 

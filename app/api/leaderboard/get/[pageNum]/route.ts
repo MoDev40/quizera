@@ -20,8 +20,8 @@ export async function GET(req:NextRequest,{params}:{params:Params}){
           model: "User",
           select:"name"
         })
-        .skip((toNum - 1) * 20)
-        .limit(20);
+        .skip((toNum - 1) * 15)
+        .limit(15);
 
         return NextResponse.json({ message: "Successfully Fetched",data:leaderboard }, { status: 200 });
     } catch (error:any) {

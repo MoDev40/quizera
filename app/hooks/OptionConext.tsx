@@ -2,12 +2,12 @@
 import React, {createContext, useContext, useEffect} from "react"
 
 interface Option {
-    category: string;
+    category: number;
     number: number;
     level: string;
 }
 const options : Option = {
-    category: "",
+    category: 0,
     number: 5,
     level: ""
 }

@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
-import { Github, Loader } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 const HomeHero = () => {
   const router = useRouter()
@@ -19,11 +19,11 @@ const HomeHero = () => {
   const {option,setOption} = useOption()
   const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {value} = event.target
-    setOption({...option,level:option?.level as string,category:option?.category as string, number:Number(value) || option?.number as number})
+    setOption({...option,level:option?.level as string,category:option?.category as number, number:Number(value) || option?.number as number})
     }
 
     const handleStart = ()=>{
-      if(!option || option.category == "" || option.level == ""){
+      if(!option || option.category == 0 || option.level == ""){
         toast("Select Options..")
         return
       }

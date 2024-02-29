@@ -3,7 +3,9 @@ import React from 'react'
 
 const page = () => {
   return (
-    <QuizPlayground/>
+    <div className='w-full'>
+      <QuizPlayground/>
+    </div>
   )
 }
 

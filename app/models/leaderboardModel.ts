@@ -1,4 +1,3 @@
-// used for current month leaderboard 
 import { Model, Schema, model, models } from "mongoose"
 
 interface LeaderboardDocument extends Document {

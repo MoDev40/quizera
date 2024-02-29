@@ -16,7 +16,7 @@ import { useOption } from "../hooks/OptionConext"
 export function SelectLevel() {
   const {option,setOption} = useOption()
   return (
-    <Select onValueChange={ value => setOption({...option,level:value,category:option?.category as string, number:option?.number as number})}>
+    <Select onValueChange={ value => setOption({...option,level:value,category:option?.category as number, number:option?.number as number})}>
       <SelectTrigger className={cn("p-4")}>
         <SelectValue placeholder="Select a Level" />
       </SelectTrigger>

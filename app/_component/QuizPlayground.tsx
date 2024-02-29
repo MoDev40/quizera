@@ -4,7 +4,7 @@ import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import {shuffle} from "lodash"

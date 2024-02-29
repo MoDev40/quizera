@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 import { ArrowLeft, ArrowRight, Home, Loader } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 

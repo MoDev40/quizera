@@ -22,10 +22,20 @@ export async function GET(req:NextRequest,{params}:{params:Params}){
         connectDB()
 
         const leaderboard = await LeaderboardModel.find({
-            date: {
-                $lte: endDate,
-                $gte:startDate.toISOString().split('T')[0],
-            }
+            $or:[
+                {
+                    date: {
+                        $lte: endDate,
+                        $gte:currentDate
+                    }
+                },
+                {
+                    date: {
+                        $lte: endDate,
+                        $gte:startDate
+                    }
+                }
+            ]
         })
         .sort({ points: -1 })
         .populate({

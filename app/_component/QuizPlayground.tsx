@@ -1,5 +1,5 @@
 'use client'
-import React, {useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Button } from '@/components/ui/button'
@@ -42,29 +42,33 @@ const QuizPlayground = () => {
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
-    
-      
+
       if(!user?.user?.email){
         router.push("/")
         return 
       }
 
+      useEffect(()=>{
+        let ansPoint = 3;
+        if (option?.level.toLowerCase() === "medium") {
+          ansPoint = 4;
+        } else if (option?.level.toLowerCase() === "hard") {
+          ansPoint = 5;
+        }
+        setPoints(ansPoint)
+      },[option?.level])
+
     const handleCheckAndNext = (answer:string)=>{
       if(answer === data?.results[i].correct_answer){
-          let ansPoint = 3;
-          if (option?.level.toLowerCase() === "medium") {
-            ansPoint = 4;
-          } else if (option?.level.toLowerCase() === "hard") {
-            ansPoint = 5;
+        setPoints((pevPoints)=>pevPoints+pevPoints)
+
         }
-        setPoints((prevPoints)=>prevPoints+ansPoint)
-      }
+        if((i+1) != data?.results.length!){
+          setI((prevI)=>prevI+1)
+        }else{
+          updateLeader()
+        }
       
-      if((i+1) != data?.results.length!){
-        setI((prevI)=>prevI+1)
-      }else{
-        updateLeader()
-      }
 
     }
 

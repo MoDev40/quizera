@@ -33,10 +33,21 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
             {
               $and: [
                 {
-                  date: {
-                    $lte: endDate,
-                    $gte:startDate.toISOString().split('T')[0]
-                  }
+                  $or:[
+                    {
+                        date: {
+                            $lte: endDate,
+                            $gte:currentDate
+                        }
+                    },
+                    {
+                        date: {
+                            $lte: endDate,
+                            $gte:startDate
+                        }
+                    }
+                ]
+
                 },
                 {
                   user:user?._id
@@ -48,7 +59,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
                 // Update leaderboard if exists
               $set: {
                 user: user?._id,
-                date: startDate.toISOString().split('T')[0],
+                date: startDate,
               },
                 // Increment the leaderboard point
               $inc: {

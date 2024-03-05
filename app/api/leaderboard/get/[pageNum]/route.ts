@@ -24,7 +24,7 @@ export async function GET(req:NextRequest,{params}:{params:Params}){
         const leaderboard = await LeaderboardModel.find({
             date: {
                 $lte: endDate,
-                $gte:startDate
+                $gte:startDate.toISOString().split('T')[0],
             }
         })
         .sort({ points: -1 })

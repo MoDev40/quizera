@@ -48,7 +48,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
                 // Update leaderboard if exists
               $set: {
                 user: user?._id,
-                date: startDate.toDateString(),
+                date: startDate.toISOString().split('T')[0],
               },
                 // Increment the leaderboard point
               $inc: {

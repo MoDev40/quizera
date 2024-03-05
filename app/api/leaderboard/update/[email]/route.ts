@@ -35,7 +35,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
                 {
                   date: {
                     $lte: endDate,
-                    $gte:startDate
+                    $gte:startDate.toISOString().split('T')[0]
                   }
                 },
                 {
@@ -48,7 +48,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
                 // Update leaderboard if exists
               $set: {
                 user: user?._id,
-                date: startDate
+                date: startDate.toDateString(),
               },
                 // Increment the leaderboard point
               $inc: {
@@ -64,6 +64,7 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
         if(!leaderboard){
             return NextResponse.json({ message: "Error: Failed to update leaderboard" }, { status: 400 });
         }
+        console.log(startDate.toDateString());
         return NextResponse.json({ message: "Success: Leaderboard updated" }, { status: 200 });
     } catch (error:any) {
         return NextResponse.json({ message: "Error: " + error.message }, { status: 500 });

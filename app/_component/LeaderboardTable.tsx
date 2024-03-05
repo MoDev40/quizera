@@ -74,7 +74,7 @@ const LeaderboardTable = () => {
         </TableRow>
     </TableHeader>
     <TableBody>
-      {
+      {data?.data&&
         data?.data.map((item,index) => (
           <TableRow key={item._id}>
           <TableCell className="font-medium">{index+1}</TableCell>

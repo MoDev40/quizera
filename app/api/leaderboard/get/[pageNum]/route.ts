@@ -11,9 +11,22 @@ export async function GET(req:NextRequest,{params}:{params:Params}){
         const { pageNum } = params;
         const toNum = Number(pageNum)
 
+        const currentDate = new Date();
+
+        const fullYear = currentDate.getFullYear();
+        const fullMonth = currentDate.getMonth()
+        
+        const startDate = new Date(fullYear, fullMonth, 1)
+        const endDate = new Date(fullYear, fullMonth + 1,0)
+
         connectDB()
 
-        const leaderboard = await LeaderboardModel.find()
+        const leaderboard = await LeaderboardModel.find({
+            date: {
+                $lte: endDate,
+                $gte:startDate
+            }
+        })
         .sort({ points: -1 })
         .populate({
           path: "user",

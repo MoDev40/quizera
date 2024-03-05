@@ -34,7 +34,8 @@ export async function PUT(req:NextRequest,{params}:{params:Params}){
               $and: [
                 {
                   date: {
-                    $lte: endDate
+                    $lte: endDate,
+                    $gte:startDate
                   }
                 },
                 {

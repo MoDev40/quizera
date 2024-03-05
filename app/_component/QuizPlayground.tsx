@@ -48,17 +48,16 @@ const QuizPlayground = () => {
         return 
       }
 
-      useEffect(()=>{
-        let ansPoint = 3;
-        if (option?.level.toLowerCase() === "medium") {
-          ansPoint = 4;
-        } else if (option?.level.toLowerCase() === "hard") {
-          ansPoint = 5;
-        }
-        setPoints(ansPoint)
-      },[option?.level])
 
     const handleCheckAndNext = (answer:string)=>{
+      let ansPoint = 3;
+      if (option?.level.toLowerCase() === "medium") {
+        ansPoint = 4;
+      } else if (option?.level.toLowerCase() === "hard") {
+        ansPoint = 5;
+      }
+      setPoints(ansPoint)
+      
       if(answer === data?.results[i].correct_answer){
         setPoints((pevPoints)=>pevPoints+pevPoints)
 

@@ -32,7 +32,7 @@ export function CategorySelection () {
     const {data,isLoading} = useSWR<TriviaCategories>("https://opentdb.com/api_category.php",fetcher)
   return (
     isLoading ? <Spinner status="Getting data...."/>:
-    <Select  onValueChange={ value => setOption({...option,level:option?.level as string,category:Number(value), number:option?.number as number})}>
+    <Select  onValueChange={ value => setOption({...option,level:option?.level as string,category:Number(value), number:option?.number as number,points:option?.points as number})}>
     <SelectTrigger className={cn("p-4")}>
       <SelectValue placeholder="Select a category" />
     </SelectTrigger>

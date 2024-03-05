@@ -19,7 +19,7 @@ const HomeHero = () => {
   const {option,setOption} = useOption()
   const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {value} = event.target
-    setOption({...option,level:option?.level as string,category:option?.category as number, number:Number(value) || option?.number as number})
+    setOption({...option,level:option?.level as string,category:option?.category as number, number:Number(value) || option?.number as number,points:option?.points as number})
     }
 
     const handleStart = ()=>{
@@ -27,6 +27,13 @@ const HomeHero = () => {
         toast("Select Options..")
         return
       }
+      let ansPoint = 3
+      if (option.level.toLowerCase() === "medium") {
+        ansPoint = 4;
+      } else if (option.level.toLowerCase() === "hard") {
+        ansPoint = 5;
+      }
+      setOption({...option,points:ansPoint})
       router.push("/quiz/playground")
     }
     

@@ -5,11 +5,13 @@ interface Option {
     category: number;
     number: number;
     level: string;
+    points: number;
 }
 const options : Option = {
     category: 0,
     number: 5,
-    level: ""
+    level: "",
+    points:3
 }
 
 interface ContextType {

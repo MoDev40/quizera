@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Button } from '@/components/ui/button'
@@ -42,34 +42,26 @@ const QuizPlayground = () => {
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
+    const [resultLoad,setResultLoad] = useState<boolean>(false)
 
       if(!user?.user?.email){
         router.push("/")
         return 
       }
 
-
-    const handleCheckAndNext = (answer:string)=>{
-      let ansPoint = 3;
-      if (option?.level.toLowerCase() === "medium") {
-        ansPoint = 4;
-      } else if (option?.level.toLowerCase() === "hard") {
-        ansPoint = 5;
-      }
-      setPoints(ansPoint)
-      
-      if(answer === data?.results[i].correct_answer){
-        setPoints((pevPoints)=>pevPoints+pevPoints)
-
+      const handleCheckAndNext = (answer: string) => {
+        if (answer === data?.results[i].correct_answer) {
+          setPoints((prevPoint) => prevPoint + option?.points!);
         }
-        if((i+1) != data?.results.length!){
-          setI((prevI)=>prevI+1)
+
+        if (i + 1 !== data?.results.length) {
+          setI((prevI) => prevI + 1);
         }else{
-          updateLeader()
+          setIsDone(true)
         }
-      
 
-    }
+      
+      };
 
     const updateLeader = async()=>{
       setIsDone(true)
@@ -77,12 +69,12 @@ const QuizPlayground = () => {
         method:"PUT",
         body: JSON.stringify({points})
       }).then(()=>{
-        setIsDone(false)
         setOption(null)
         toast(`Result ${points}`)
         router.push("/")
       }).finally(()=>{
         setIsDone(false)
+        setResultLoad(false)
       })
     } 
 
@@ -100,10 +92,10 @@ const QuizPlayground = () => {
         }
       </div>
       <div>
-          <div className='grid md:grid-cols-2 gap-2'>
+          <div className='w-full grid md:grid-cols-2 gap-2'>
           { data?.results&& 
-            shuffle(data?.results[i]?.incorrect_answers.concat(data.results[i]?.correct_answer)).map((ia,index)=>(
-              <Button key={index} onClick={()=>handleCheckAndNext(ia)} variant="outline">{ia}</Button>
+            shuffle(data?.results[i]?.incorrect_answers.concat(data.results[i]?.correct_answer)).map((choose,index)=>(
+              <Button className='w-full' key={index} onClick={()=>handleCheckAndNext(choose)} variant="outline">{sanitizeHtml(choose)}</Button>
             ))
           }
           </div>
@@ -112,8 +104,10 @@ const QuizPlayground = () => {
     ):
     <div className='flex justify-center'>
       {
-        isDone&& 
+        resultLoad ? 
         <Spinner status='calculating result....'/>
+        :
+        <Button className='mt-10' disabled={resultLoad} onClick={updateLeader}>Push Result to Leaderboard</Button>
       }
     </div>
   )

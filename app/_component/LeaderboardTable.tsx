@@ -10,12 +10,13 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { ArrowLeft, ArrowRight, Home, Loader } from "lucide-react";
+import { ArrowLeft, ArrowRight} from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
+import Spinner from "./Spinner";
 
 interface TypeData {
   _id: string;
@@ -54,7 +55,7 @@ const LeaderboardTable = () => {
     }
   }
   return (
-    isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Getting data....</p></div> :
+    isLoading  ? <Spinner status="Getting data...."/> :
     <Table className={cn("w-full")}>
     <TableCaption>
         <div className="flex flex-row justify-between">

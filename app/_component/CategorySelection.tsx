@@ -1,5 +1,4 @@
 'use client'
-import { Loader } from "lucide-react";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils";
 import { useOption } from "../hooks/OptionConext";
+import Spinner from "./Spinner";
 
 
 interface TriviaCategory {
@@ -31,7 +31,7 @@ export function CategorySelection () {
     const {option,setOption} = useOption()
     const {data,isLoading} = useSWR<TriviaCategories>("https://opentdb.com/api_category.php",fetcher)
   return (
-    isLoading ? <Loader size={30} className="animate-spin"/>:
+    isLoading ? <Spinner status="Getting data...."/>:
     <Select  onValueChange={ value => setOption({...option,level:option?.level as string,category:Number(value), number:option?.number as number})}>
     <SelectTrigger className={cn("p-4")}>
       <SelectValue placeholder="Select a category" />

@@ -29,10 +29,6 @@ const HomeHero = () => {
       }
       router.push("/quiz/playground")
     }
-    const handleStartRandom = ()=>{
-      setOption({...option,level:option?.level as string,category:option?.category as number, number:5})
-      router.push("/quiz/playground")
-    }
     
    return (
     <>

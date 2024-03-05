@@ -1,13 +1,13 @@
 'use client'
-import React, {useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
-import { Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import {shuffle} from "lodash"
+import Spinner from './Spinner'
 
 interface Question {
   id: number;
@@ -42,7 +42,6 @@ const QuizPlayground = () => {
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
-    const [resultLoad,setResultLoad] = useState<boolean>(false)
     
       
       if(!user?.user?.email){
@@ -64,13 +63,13 @@ const QuizPlayground = () => {
       if((i+1) != data?.results.length!){
         setI((prevI)=>prevI+1)
       }else{
-        setIsDone(true)
+        updateLeader()
       }
 
     }
 
     const updateLeader = async()=>{
-      setResultLoad(true)
+      setIsDone(true)
       fetch(`/api/leaderboard/update/${user?.user?.email}`,{
         method:"PUT",
         body: JSON.stringify({points})
@@ -80,12 +79,12 @@ const QuizPlayground = () => {
         toast(`Result ${points}`)
         router.push("/")
       }).finally(()=>{
-        setResultLoad(false)
+        setIsDone(false)
       })
     } 
 
   return (
-    isLoading  ? <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>Preparing data....</p></div>:
+    isLoading  ? <Spinner status='Preparing data....'/>:
     !isDone?(
       <div className='w-full p-4 space-y-5'>
       <div className='text-center'>
@@ -110,10 +109,8 @@ const QuizPlayground = () => {
     ):
     <div className='flex justify-center'>
       {
-        resultLoad ? 
-        <div className='flex space-x-2 justify-center mt-10'><Loader className='animate-spin'/><p>calculating result....</p></div>
-        :
-        <Button className='mt-10' onClick={updateLeader}>Push Result to Leaderboard</Button>
+        isDone&& 
+        <Spinner status='calculating result....'/>
       }
     </div>
   )

@@ -1,70 +1,143 @@
 'use client'
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import NavBar from './NavBar';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import {CategorySelection} from './CategorySelection';
-import { SelectLevel } from './LevelSelection';
 import { Input } from '@/components/ui/input';
-import { useOption } from '../hooks/OptionConext';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import useSWR, { Fetcher } from 'swr';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import {z} from "zod"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Spinner from './Spinner';
+import Footer from './Footer';
+import Hero from './Hero';
+import { Choices, useUser } from '../hooks/UserContext';
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { toast } from "sonner"
-import { Github } from 'lucide-react';
+
+interface TriviaCategory {
+  id:number;
+  name:string;
+}
+
+interface TriviaCategories {
+  trivia_categories:TriviaCategory[];
+}
+
+const optionsSchema = z.object({
+  level:z.string().min(1),
+  category:z.string().min(1),
+  count:z.string().min(1),
+})
+
+type Inputs = z.infer<typeof optionsSchema> 
+
+const levels : string[] = ["easy","medium","hard"]
+
+function isUndefined(checker:any):boolean {
+  return checker === undefined ? true : false 
+}
+
+function pointIdentifier(level:string):number {
+  return level === "easy"  ?  3 : 5
+}
+const fetcher: Fetcher<any,string> = (url): Promise<TriviaCategories> =>
+fetch(url,{cache:"no-cache"}).then((res) => res.json());
+
 
 const HomeHero = () => {
+  const form = useForm<Inputs>()
+  const {data:categories,isLoading} = useSWR<TriviaCategories>("https://opentdb.com/api_category.php",fetcher)
+  const {user,setChoices} = useUser()
   const router = useRouter()
-  const {data} = useSession()
-  const {option,setOption} = useOption()
-  const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const {value} = event.target
-    setOption({...option,level:option?.level as string,category:option?.category as number, number:Number(value) || option?.number as number,points:option?.points as number})
-    }
 
-    const handleStart = ()=>{
-      if(!option || option.category == 0 || option.level == ""){
-        toast("Select Options..")
-        return
-      }
-      let ansPoint = 3
-      if (option.level.toLowerCase() === "medium") {
-        ansPoint = 4;
-      } else if (option.level.toLowerCase() === "hard") {
-        ansPoint = 5;
-      }
-      setOption({...option,points:ansPoint})
-      router.push("/quiz/playground")
+  const onSubmit : SubmitHandler<Inputs> = (data) =>{
+    if(isUndefined(data.level) || isUndefined(data.count) || isUndefined(data.category)){
+      toast("Please select choice")
+      return
     }
-    
+    const choices : Choices = {
+      level:data.level,
+      category_id:Number(data.category),
+      count:Number(data.count),
+      points:pointIdentifier(data.level)
+    }
+    setChoices(choices)
+    router.push("/quiz/playground") 
+  }
    return (
     <>
     <NavBar/>
     <div className="flex flex-col space-y-4 items-center justify-center h-screen">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome to Quizera</h1>
-      <p className="text-lg text-center  text-gray-600 mb-8 capitalize">
-        Unleash your knowledge and challenge yourself with captivating quizzes!
-      </p>
-        {
-          data?.user && <>
-          <div className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4'>
-            <CategorySelection/> 
-            <SelectLevel/>
-            <Input onChange={handelChange} defaultValue={5} placeholder='Number'type='number'/>
-            <Button onClick={handleStart} className={cn('w-full')}>Start Quiz</Button>
-          </div> 
+      <Hero/>
+        { isLoading ? <Spinner status='Getting ready'/> :
+          user && <>
+            <Form {...form}>
+              <form className='flex space-y-4 md:space-y-0 flex-col items-center md:flex-row md:space-x-4' onSubmit={form.handleSubmit(onSubmit)}>
+                {/* Level selection */}
+                <FormField
+                name="level"
+                control={form.control}
+                render={({field})=>(
+                  <FormItem>
+                    <Select   onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                      <SelectValue placeholder="Select a Level" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {
+                        levels.map((level,index) =>(
+                          <SelectItem  key={index} value={level} >{level.charAt(0).toUpperCase()+level.slice(1)}</SelectItem>
+                        ))
+                      }
+                    </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+                />
+                {/* category selection */}
+                <FormField
+                name="category"
+                control={form.control}
+                render={({field})=>(
+                  <FormItem>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                    <SelectValue placeholder="Select a Level" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    { categories?.trivia_categories&&
+                      categories?.trivia_categories?.map((category) =>(
+                        <SelectItem key={category.id} value={category.id.toString()} >{category.name}</SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                  </Select>
+                </FormItem>
+                )}
+                />
+                {/* count input */}
+                <FormField
+                name="count"
+                defaultValue='5'
+                control={form.control}
+                render={({field})=>(
+                  <FormItem>
+                    <Input type='text' {...field}/>
+                  </FormItem>
+                )}
+                />
+                <Button type="submit">Start</Button>
+              </form>
+            </Form>
           </>
         }
     </div>
-    <footer>
-      <div className='flex flex-row space-x-4 items-center justify-center'>
-      <Link href="https://github.com/MoDev40" target='_blank'><Github size={30}/></Link>
-      <p className="text-center text-xl">
-        Quizera © 2024 
-      </p>
-      <Link className="text-xs" target='_blank' href="https://github.com/MoDev40/quizera">source code</Link>
-      </div>
-    </footer>
+    <Footer/>
     </>
   );
 };

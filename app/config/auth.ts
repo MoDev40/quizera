@@ -36,6 +36,28 @@ export const authOptions : NextAuthOptions = {
               }
               
             return true
-        }
+        },async jwt({token}){
+            if(!token.email){
+                return{
+                    message:"Invalid credentials"
+                }
+            }
+            connectDB()
+            const fetchedUser = await UserModel.findOne({ email: token.email });
+            return{
+                ...token,
+                id:fetchedUser?._id,
+                name:fetchedUser?.name,
+                email:fetchedUser?.email,
+            }
+        },session({token,session}){
+            return {
+                    ...session,
+                    user: {
+                      ...session.user,
+                      id: token.id,
+                    }, 
+                }
+            }
     }
 } 

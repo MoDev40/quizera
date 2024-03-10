@@ -1,16 +1,16 @@
 'use client'
-import { OptionProvider } from "@/app/hooks/OptionConext"
 import { SessionProvider } from "next-auth/react"
 import { Toaster } from "@/components/ui/sonner"
 import React from "react"
+import { UserProvider } from "@/app/hooks/UserContext"
 
 const Provider = ({children}:{children:React.ReactNode}) => {
   return (
     <SessionProvider>
-      <OptionProvider>
+      <UserProvider>
         {children}
+      </UserProvider>
         <Toaster />
-      </OptionProvider>
     </SessionProvider>
   )
 }

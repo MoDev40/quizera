@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import Spinner from "./Spinner";
+import { useUser } from "../hooks/UserContext";
 
 interface TypeData {
   _id: string;
@@ -37,14 +38,13 @@ const fetcher : Fetcher<any,string> = (url) : Promise<TypeResponse> => fetch(url
 const LeaderboardTable = () => {
   const router = useRouter()
   const [pageNum, setPageNum] = useState<number>(1);
-  const {data:user} = useSession()
-
+  const {user} = useUser()
   const { data, isLoading } = useSWR<TypeResponse>(
     `/api/leaderboard/get/${pageNum}`,
     fetcher
   );
 
-  if(!user?.user?.email){
+  if(!user){
     router.push("/")
     return 
   }

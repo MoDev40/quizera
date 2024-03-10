@@ -1,6 +1,5 @@
 'use client'
 import React, {useState } from 'react'
-import { useOption } from '../hooks/OptionConext'
 import useSWR, { Fetcher } from 'swr'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
@@ -8,6 +7,7 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import {shuffle} from "lodash"
 import Spinner from './Spinner'
+import { useUser } from '../hooks/UserContext'
 
 interface Question {
   id: number;
@@ -35,13 +35,13 @@ function sanitizeHtml(text:string):string {
 const QuizPlayground = () => {
     const {data:user} = useSession()
     const router = useRouter()
+    const {choices} = useUser()
     
-    const {option,setOption} = useOption()
-    
-    const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${option?.number}&category=${option?.category}&difficulty=${option?.level?.toLocaleLowerCase()}&type=multiple`,fetcher)
+    const {data,isLoading} = useSWR<ResponseType>(`https://opentdb.com/api.php?amount=${choices?.count}&category=${choices?.category_id}&difficulty=${choices?.level?.toLocaleLowerCase()}&type=multiple`,fetcher)
     const [points,setPoints] = useState<number>(0)
     const [i,setI] = useState<number>(0)
     const [isDone,setIsDone] = useState<boolean>(false)
+
     const [resultLoad,setResultLoad] = useState<boolean>(false)
 
       if(!user?.user?.email){
@@ -51,7 +51,7 @@ const QuizPlayground = () => {
 
       const handleCheckAndNext = (answer: string) => {
         if (answer === data?.results[i].correct_answer) {
-          setPoints((prevPoint) => prevPoint + option?.points!);
+          setPoints((prevPoint) => prevPoint + choices?.points!);
         }
 
         if (i + 1 !== data?.results.length) {
@@ -69,7 +69,6 @@ const QuizPlayground = () => {
         method:"PUT",
         body: JSON.stringify({points})
       }).then(()=>{
-        setOption(null)
         toast(`Result ${points}`)
         router.push("/")
       }).finally(()=>{

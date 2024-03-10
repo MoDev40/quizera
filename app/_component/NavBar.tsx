@@ -4,10 +4,11 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { useUser } from '../hooks/UserContext'
 
 const NavBar = () => {
     const router = useRouter()
-    const {data} = useSession()
+    const {user} = useUser()
 
     const handleSignIn = async()=>{
         await signIn("google")
@@ -19,16 +20,16 @@ const NavBar = () => {
     }
 
   return (
-    <div className='p-4 flex flex-row justify-between items-center'>
+    <div className='p-4  space-x-2 flex flex-row justify-between items-center'>
         <div>
         <Link href="/">
             <Button variant="outline">Quizera</Button>
         </Link>
         </div>
         <div className='space-x-3'>
-        { data?.user?
+        { user?
         (   
-            <div className='space-x-2'>
+            <div className='space-x-2 flex flex-row'>
                 <Link href="/leaderboard">
                     <Button className='rounded-sm' variant="outline">Leaderboard</Button>
                 </Link>
